@@ -9,13 +9,13 @@ install:
   - echo "install nothing!" # put your normal pre-testing installs here
 
 script:
-  - echo ">>>>>>>>>>>> $TRAVIS_BRANCH"
   - echo "no tests!" # put your normal testing scripts here
 
 after_success:
-  - docker login -e $DOCKER_HUB_EMAIL -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWD
+  - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWD
   - export REPO=kamynina/pgtap
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - export TAG=`if [ "$TRAVIS_BRANCH" = "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - echo ">>>>>>>>>>>> $REPO"
   - docker build -f Dockerfile -t $REPO:$COMMIT .
   - docker tag $REPO:$COMMIT $REPO:$TAG
   - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
