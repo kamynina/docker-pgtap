@@ -61,11 +61,12 @@ fi
 
 if [ $MODE = "xUnit" ] ; then
   # install tests
-  PGPASSWORD=$PASSWORD psql -h $HOST -p $PORT -d $DATABASE -U $USER -f $INSTALL_TEST_SCRIPT > /dev/null 2>&1
+  PGPASSWORD=$PASSWORD psql -h $HOST -p $PORT -d $DATABASE -U $USER -v 'ON_ERROR_STOP=on' -f $INSTALL_TEST_SCRIPT > /dev/null 2>&1
   rc=$?
-  echo "Tests aren't installed"
-  exit $rc
-
+  if [[ $rc != 0 ]] ; then
+      echo "Tests aren't installed"
+      exit $rc
+  fi
   # run the tests
   PGPASSWORD=$PASSWORD pg_prove -v -h $HOST -p $PORT -d $DATABASE -U $USER --schema test --match $TEST_PATTERN
 else
