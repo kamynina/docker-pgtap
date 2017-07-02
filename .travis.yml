@@ -1,5 +1,13 @@
 sudo: required #is required to use docker service in travis
 
+env:
+  global:
+  - COMMIT=${TRAVIS_COMMIT::8}
+  - REPO=kamynina/pgtap
+  - CGO_ENABLED=0
+  - GOOS=linux
+  - GOARCH=amd64
+
 language: sql #can be any language, just php for example
 
 services:
@@ -9,7 +17,8 @@ install:
   - echo "install nothing!" # put your normal pre-testing installs here
 
 script:
-  - echo "no tests!" # put your normal testing scripts here
+ - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+ - docker build -t level-three-rest -t $REPO:$TAG -f Dockerfile .
 
 after_success:
   - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWD
