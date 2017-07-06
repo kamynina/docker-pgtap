@@ -6,7 +6,6 @@ RUN apt-get update && \
   apt-get install -y --no-install-recommends ca-certificates git build-essential curl postgresql-server-dev-$PG_MAJOR && \
   rm -rf /var/lib/apt/lists/* /var/tmp/*
 
-WORKDIR /tmp
 RUN git clone --branch v0.97.0 https://github.com/theory/pgtap.git && \
   cd pgtap && \
   make && \
@@ -20,7 +19,6 @@ RUN curl -LO http://xrl.us/cpanm \
 COPY ./run-tests.sh /run-tests.sh
 RUN chmod +x /run-tests.sh
 
-WORKDIR /
 
 CMD ["/run-tests.sh"]
 ENTRYPOINT ["/run-tests.sh"]
