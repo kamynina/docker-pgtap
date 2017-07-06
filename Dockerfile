@@ -6,10 +6,13 @@ RUN apt-get update && \
   apt-get install -y --no-install-recommends ca-certificates git build-essential curl postgresql-server-dev-$PG_MAJOR && \
   rm -rf /var/lib/apt/lists/* /var/tmp/*
 
+WORKDIR /
+
 RUN git clone --branch v0.97.0 https://github.com/theory/pgtap.git && \
   cd pgtap && \
   make && \
-  make install
+  make install && \
+  cd /
 
 # install pg_prove
 RUN curl -LO http://xrl.us/cpanm \
